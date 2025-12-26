@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confronto Tariffe Energia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    :root {
+      --bg-dark: #0f172a;
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.1);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --green: #22c55e;
+      --green-light: #4ade80;
+      --green-bg: rgba(34, 197, 94, 0.15);
+      --fuchsia: #d946ef;
+      --orange: #f97316;
+      --blue: #3b82f6;
+      --input-bg: rgba(30, 41, 59, 0.8);
+    }
+    
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      min-height: 100vh;
+      color: var(--text);
+      line-height: 1.5;
+      padding: 2rem 1rem;
+    }
+    
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    
+    h1 {
+      font-size: clamp(1.75rem, 5vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    h1 span {
+      background: linear-gradient(135deg, var(--green), var(--green-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .subtitle {
+      color: var(--text-muted);
+    }
+    
+    /* Progress Steps */
+    .progress-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .progress-step {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .progress-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--input-bg);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.875rem;
+      font-weight: 700;
+      transition: all 0.3s;
+    }
+    
+    .progress-dot.active {
+      background: var(--green);
+      border-color: var(--green);
+      color: white;
+    }
+    
+    .progress-dot.completed {
+      background: var(--green-bg);
+      border-color: var(--green);
+      color: var(--green);
+    }
+    
+    .progress-line {
+      width: 40px;
+      height: 2px;
+      background: var(--border);
+      transition: background 0.3s;
+    }
+    
+    .progress-line.completed {
+      background: var(--green);
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .card-subtitle {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Inputs */
+    .input-group {
+      margin-bottom: 1.25rem;
+    }
+    
+    .input-label {
+      display: block;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 0.375rem;
+    }
+    
+    .input-wrapper {
+      position: relative;
+    }
+    
+    .input-field {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      padding-right: 4rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 1.125rem;
+      color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    
+    .input-field:focus {
+      outline: none;
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+    }
+    
+    .select-field {
+      padding-right: 2.5rem;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 1.25rem;
+    }
+    
+    .select-field option {
+      background: #1e293b;
+      color: var(--text);
+    }
+    
+    .input-unit {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+    
+    .input-hint {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 0.25rem;
+    }
+    
+    .fields-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    
+    .operator-row {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-end;
+      margin-bottom: 1rem;
+    }
+    
+    .btn-search {
+      height: 44px;
+      width: 44px;
+      min-width: 44px;
+      margin-top: 1.5rem; /* Allinea con i campi che hanno label */
+      border: none;
+      border-radius: 8px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      font-size: 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .btn-search:hover {
+      background: var(--green);
+      border-color: var(--green);
+      transform: scale(1.05);
+    }
+    
+    .price-disclaimer {
+      background: rgba(234, 179, 8, 0.1);
+      border: 1px solid rgba(234, 179, 8, 0.3);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+      color: #eab308;
+      margin-bottom: 1rem;
+    }
+    
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+    
+    /* Market Type Selection */
+    .market-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .market-option {
+      background: var(--input-bg);
+      border: 2px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    
+    .market-option:hover {
+      border-color: var(--text-dim);
+    }
+    
+    .market-option.selected {
+      border-color: var(--green);
+      background: var(--green-bg);
+    }
+    
+    .market-option.selected.libero {
+      border-color: var(--fuchsia);
+      background: rgba(217, 70, 239, 0.1);
+    }
+    
+    .market-option.selected.stg {
+      border-color: var(--blue);
+      background: rgba(59, 130, 246, 0.1);
+    }
+    
+    .market-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .market-name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .market-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    
+    /* Buttons */
+    .btn-row {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    
+    .btn {
+      flex: 1;
+      padding: 0.875rem 1.5rem;
+      border-radius: 0.5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+    
+    .btn-secondary {
+      background: var(--input-bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .btn-primary {
+      background: var(--green);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #1ea550;
+    }
+    
+    .btn-primary:disabled {
+      background: var(--text-dim);
+      cursor: not-allowed;
+    }
+    
+    /* Step visibility */
+    .step {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .step.active {
+      display: block;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Results */
+    .result-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .result-card {
+      background: var(--input-bg);
+      border: 2px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    
+    .result-card.winner {
+      border-color: var(--green);
+      box-shadow: 0 0 30px rgba(34, 197, 94, 0.2);
+    }
+    
+    .result-card.libero {
+      border-color: var(--fuchsia);
+    }
+    
+    .result-card.stg {
+      border-color: var(--blue);
+    }
+    
+    .result-operator {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    
+    .result-name {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    
+    .result-card.libero .result-name {
+      color: var(--fuchsia);
+    }
+    
+    .result-card.stg .result-name {
+      color: var(--blue);
+    }
+    
+    .result-total {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+    
+    .result-card.winner .result-total {
+      color: var(--green-light);
+    }
+    
+    .result-period {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+    
+    .winner-badge {
+      display: inline-block;
+      background: var(--green);
+      color: white;
+      font-size: 0.625rem;
+      font-weight: 700;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.75rem;
+    }
+    
+    /* Summary boxes */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .summary-box {
+      background: var(--input-bg);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      text-align: center;
+    }
+    
+    .summary-box.highlight {
+      background: var(--green-bg);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    
+    .summary-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    
+    .summary-value {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    
+    .summary-value.positive {
+      color: var(--green-light);
+    }
+    
+    .summary-note {
+      font-size: 0.625rem;
+      color: var(--text-dim);
+      margin-top: 0.25rem;
+    }
+    
+    /* Compare Bars */
+    .compare-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .compare-item {
+      margin-bottom: 1rem;
+    }
+    
+    .compare-label {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    
+    .compare-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    .compare-bar {
+      height: 1.5rem;
+      border-radius: 0.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 0.5rem;
+      transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      min-width: 60px;
+    }
+    
+    .compare-bar.bar1 {
+      background: var(--fuchsia);
+    }
+    
+    .compare-bar.bar1.stg {
+      background: var(--blue);
+    }
+    
+    .compare-bar.bar2 {
+      background: var(--orange);
+    }
+    
+    .compare-bar.bar2.stg {
+      background: var(--blue);
+    }
+    
+    .compare-bar-value {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: white;
+    }
+    
+    /* Collapsible */
+    .collapsible-toggle {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0;
+      transition: color 0.2s;
+      margin-top: 1rem;
+    }
+    
+    .collapsible-toggle:hover {
+      color: var(--text);
+    }
+    
+    .collapsible-toggle svg {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.2s;
+    }
+    
+    .collapsible-toggle.open svg {
+      transform: rotate(90deg);
+    }
+    
+    .collapsible-content {
+      display: none;
+      padding-top: 1rem;
+    }
+    
+    .collapsible-content.open {
+      display: block;
+    }
+    
+    .grid-5 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 1rem;
+    }
+    
+    /* Footer */
+    .footer {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      margin-top: 2rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 500px) {
+      .market-options {
+        grid-template-columns: 1fr;
+      }
+      .result-cards {
+        grid-template-columns: 1fr;
+      }
+      .btn-row {
+        flex-direction: column;
+      }
+      .fields-row {
+        grid-template-columns: 1fr;
+      }
+      .operator-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .operator-row .input-group {
+        flex: none !important;
+      }
+      .btn-search {
+        width: 100%;
+        margin-top: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-badge">
+        <div class="pulse-dot"></div>
+        Calcolatore
+      </div>
+      <h1><span>Confronto Tariffe</span> Energia</h1>
+      <p class="subtitle">Mercato Libero vs Tutele Graduali</p>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+      <div class="progress-step">
+        <div class="progress-dot active" id="prog1">1</div>
+      </div>
+      <div class="progress-line" id="line1"></div>
+      <div class="progress-step">
+        <div class="progress-dot" id="prog2">2</div>
+      </div>
+      <div class="progress-line" id="line2"></div>
+      <div class="progress-step">
+        <div class="progress-dot" id="prog3">3</div>
+      </div>
+      <div class="progress-line" id="line3"></div>
+      <div class="progress-step">
+        <div class="progress-dot" id="prog4">4</div>
+      </div>
+    </div>
+
+    <!-- Step 1: Dati Fornitura -->
+    <div class="step active" id="step1">
+      <div class="card">
+        <h2 class="card-title">⚡ Dati Fornitura</h2>
+        <p class="card-subtitle">Inserisci i dati dalla tua bolletta</p>
+        
+        <div class="grid-3">
+          <div class="input-group">
+            <label class="input-label">Consumo periodo</label>
+            <div class="input-wrapper">
+              <input type="number" id="consumo" class="input-field" value="583.35" step="0.01">
+              <span class="input-unit">kWh</span>
+            </div>
+            <div class="input-hint">Dalla bolletta</div>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Potenza</label>
+            <div class="input-wrapper">
+              <input type="number" id="potenza" class="input-field" value="9" step="0.1">
+              <span class="input-unit">kW</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Periodo</label>
+            <div class="input-wrapper">
+              <input type="number" id="mesi" class="input-field" value="2" step="1" min="1">
+              <span class="input-unit">mesi</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Costi ARERA collapsible -->
+        <button class="collapsible-toggle" id="toggleArera">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+          Costi regolati ARERA (avanzato)
+        </button>
+        <div class="collapsible-content" id="areraContent">
+          <div class="grid-5">
+            <div class="input-group">
+              <label class="input-label">Rete+Oneri</label>
+              <div class="input-wrapper">
+                <input type="number" id="reteOneri" class="input-field" value="0.044845" step="0.000001">
+                <span class="input-unit">€/kWh</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label class="input-label">Quota fissa</label>
+              <div class="input-wrapper">
+                <input type="number" id="quotaFissa" class="input-field" value="9.45" step="0.01">
+                <span class="input-unit">€/mese</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label class="input-label">Quota potenza</label>
+              <div class="input-wrapper">
+                <input type="number" id="quotaPotenza" class="input-field" value="2.106667" step="0.000001">
+                <span class="input-unit">€/kW/m</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label class="input-label">Accise</label>
+              <div class="input-wrapper">
+                <input type="number" id="accise" class="input-field" value="0.0227" step="0.0001">
+                <span class="input-unit">€/kWh</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label class="input-label">IVA</label>
+              <div class="input-wrapper">
+                <input type="number" id="iva" class="input-field" value="10" step="1">
+                <span class="input-unit">%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="goToStep(2)">Avanti →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Operatore 1 -->
+    <div class="step" id="step2">
+      <div class="card">
+        <h2 class="card-title">🏷️ Operatore 1</h2>
+        <p class="card-subtitle">Seleziona il tipo di mercato</p>
+        
+        <div class="market-options">
+          <div class="market-option libero" id="op1-libero" onclick="selectMarket(1, 'libero')">
+            <div class="market-icon">🏪</div>
+            <div class="market-name">Mercato Libero</div>
+            <div class="market-desc">Octopus, Enel, Eni, ecc.</div>
+          </div>
+          <div class="market-option stg" id="op1-stg" onclick="selectMarket(1, 'stg')">
+            <div class="market-icon">🛡️</div>
+            <div class="market-name">Tutele Graduali</div>
+            <div class="market-desc">Prezzo variabile ARERA</div>
+          </div>
+        </div>
+
+        <div id="op1-fields" style="display: none;">
+          <div class="operator-row">
+            <div class="input-group" style="flex: 1;">
+              <label class="input-label">Operatore</label>
+              <select id="select1" class="input-field select-field" onchange="onSelectOperator(1)">
+                <option value="">-- Seleziona --</option>
+                <option value="A2A Energia">A2A Energia</option>
+                <option value="Acea Energia">Acea Energia</option>
+                <option value="Alperia">Alperia</option>
+                <option value="Dolomiti Energia">Dolomiti Energia</option>
+                <option value="Duferco Energia">Duferco Energia</option>
+                <option value="E.ON Energia">E.ON Energia</option>
+                <option value="Edison Energia">Edison Energia</option>
+                <option value="Enel Energia">Enel Energia</option>
+                <option value="ENGIE Italia">ENGIE Italia</option>
+                <option value="Eni Plenitude">Eni Plenitude</option>
+                <option value="Estra Energie">Estra Energie</option>
+                <option value="Etruria Luce e Gas">Etruria Luce e Gas</option>
+                <option value="Fastweb Energia">Fastweb Energia</option>
+                <option value="Hera Comm">Hera Comm</option>
+                <option value="Illumia">Illumia</option>
+                <option value="Iren Mercato">Iren Mercato</option>
+                <option value="NeN">NeN</option>
+                <option value="Octopus Energy">Octopus Energy</option>
+                <option value="Optima Italia">Optima Italia</option>
+                <option value="Pulsee">Pulsee</option>
+                <option value="Sinergas">Sinergas</option>
+                <option value="Sorgenia">Sorgenia</option>
+                <option value="Wekiwi">Wekiwi</option>
+                <option value="__altro__">Altro...</option>
+              </select>
+            </div>
+            <div class="input-group" style="flex: 1;">
+              <label class="input-label">Offerta</label>
+              <select id="offerta1" class="input-field select-field" onchange="onSelectOfferta(1)">
+                <option value="">-- Prima seleziona operatore --</option>
+              </select>
+            </div>
+            <button type="button" class="btn-search" onclick="searchPrices(1)" title="Verifica prezzi online">🔍</button>
+          </div>
+          <div class="input-group" id="nome1-group" style="display: none;">
+            <label class="input-label">Nome operatore</label>
+            <input type="text" id="nome1" class="input-field" style="padding-right: 1rem;" placeholder="Inserisci nome operatore" autocomplete="off" data-1p-ignore data-lpignore="true">
+          </div>
+          <div class="price-disclaimer" id="disclaimer1" style="display: none;">
+            ⚠️ Prezzi indicativi, potrebbero variare. Verifica sul sito ufficiale.
+          </div>
+          
+          <div class="fields-row">
+          <div class="input-group">
+            <label class="input-label" id="prezzo1-label">Prezzo energia</label>
+            <div class="input-wrapper">
+              <input type="number" id="prezzo1" class="input-field" step="0.001">
+              <span class="input-unit">€/kWh</span>
+            </div>
+            <div class="input-hint" id="prezzo1-hint"></div>
+          </div>
+          
+          <div class="input-group" id="comm1-group">
+            <label class="input-label" id="comm1-label">Commercializzazione</label>
+            <div class="input-wrapper">
+              <input type="number" id="comm1" class="input-field" step="0.01">
+              <span class="input-unit">€/mese</span>
+            </div>
+            <div class="input-hint" id="comm1-hint"></div>
+          </div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="goToStep(1)">← Indietro</button>
+          <button class="btn btn-primary" id="btn-step2" onclick="goToStep(3)" disabled>Avanti →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Operatore 2 -->
+    <div class="step" id="step3">
+      <div class="card">
+        <h2 class="card-title">🏷️ Operatore 2</h2>
+        <p class="card-subtitle">Seleziona il tipo di mercato</p>
+        
+        <div class="market-options">
+          <div class="market-option libero" id="op2-libero" onclick="selectMarket(2, 'libero')">
+            <div class="market-icon">🏪</div>
+            <div class="market-name">Mercato Libero</div>
+            <div class="market-desc">Octopus, Enel, Eni, ecc.</div>
+          </div>
+          <div class="market-option stg" id="op2-stg" onclick="selectMarket(2, 'stg')">
+            <div class="market-icon">🛡️</div>
+            <div class="market-name">Tutele Graduali</div>
+            <div class="market-desc">Prezzo variabile ARERA</div>
+          </div>
+        </div>
+
+        <div id="op2-fields" style="display: none;">
+          <div class="operator-row">
+            <div class="input-group" style="flex: 1;">
+              <label class="input-label">Operatore</label>
+              <select id="select2" class="input-field select-field" onchange="onSelectOperator(2)">
+                <option value="">-- Seleziona --</option>
+                <option value="A2A Energia">A2A Energia</option>
+                <option value="Acea Energia">Acea Energia</option>
+                <option value="Alperia">Alperia</option>
+                <option value="Dolomiti Energia">Dolomiti Energia</option>
+                <option value="Duferco Energia">Duferco Energia</option>
+                <option value="E.ON Energia">E.ON Energia</option>
+                <option value="Edison Energia">Edison Energia</option>
+                <option value="Enel Energia">Enel Energia</option>
+                <option value="ENGIE Italia">ENGIE Italia</option>
+                <option value="Eni Plenitude">Eni Plenitude</option>
+                <option value="Estra Energie">Estra Energie</option>
+                <option value="Etruria Luce e Gas">Etruria Luce e Gas</option>
+                <option value="Fastweb Energia">Fastweb Energia</option>
+                <option value="Hera Comm">Hera Comm</option>
+                <option value="Illumia">Illumia</option>
+                <option value="Iren Mercato">Iren Mercato</option>
+                <option value="NeN">NeN</option>
+                <option value="Octopus Energy">Octopus Energy</option>
+                <option value="Optima Italia">Optima Italia</option>
+                <option value="Pulsee">Pulsee</option>
+                <option value="Sinergas">Sinergas</option>
+                <option value="Sorgenia">Sorgenia</option>
+                <option value="Wekiwi">Wekiwi</option>
+                <option value="__altro__">Altro...</option>
+              </select>
+            </div>
+            <div class="input-group" style="flex: 1;">
+              <label class="input-label">Offerta</label>
+              <select id="offerta2" class="input-field select-field" onchange="onSelectOfferta(2)">
+                <option value="">-- Prima seleziona operatore --</option>
+              </select>
+            </div>
+            <button type="button" class="btn-search" onclick="searchPrices(2)" title="Verifica prezzi online">🔍</button>
+          </div>
+          <div class="input-group" id="nome2-group" style="display: none;">
+            <label class="input-label">Nome operatore</label>
+            <input type="text" id="nome2" class="input-field" style="padding-right: 1rem;" placeholder="Inserisci nome operatore" autocomplete="off" data-1p-ignore data-lpignore="true">
+          </div>
+          <div class="price-disclaimer" id="disclaimer2" style="display: none;">
+            ⚠️ Prezzi indicativi, potrebbero variare. Verifica sul sito ufficiale.
+          </div>
+          
+          <div class="fields-row">
+          <div class="input-group">
+            <label class="input-label" id="prezzo2-label">Prezzo energia</label>
+            <div class="input-wrapper">
+              <input type="number" id="prezzo2" class="input-field" step="0.001">
+              <span class="input-unit">€/kWh</span>
+            </div>
+            <div class="input-hint" id="prezzo2-hint"></div>
+          </div>
+          
+          <div class="input-group" id="comm2-group">
+            <label class="input-label" id="comm2-label">Commercializzazione</label>
+            <div class="input-wrapper">
+              <input type="number" id="comm2" class="input-field" step="0.01">
+              <span class="input-unit">€/mese</span>
+            </div>
+            <div class="input-hint" id="comm2-hint"></div>
+          </div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="goToStep(2)">← Indietro</button>
+          <button class="btn btn-primary" id="btn-step3" onclick="goToStep(4)" disabled>Confronta →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Confronto -->
+    <div class="step" id="step4">
+      <div class="card">
+        <h2 class="card-title">📊 Confronto Finale</h2>
+        
+        <div class="result-cards" id="resultCards">
+          <!-- Generato da JS -->
+        </div>
+
+        <div class="summary-grid" id="summaryGrid">
+          <!-- Generato da JS -->
+        </div>
+
+        <div class="compare-section" id="compareBars">
+          <!-- Generato da JS -->
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="goToStep(1)">🔄 Nuovo confronto</button>
+        </div>
+      </div>
+
+      <div class="footer">
+        I costi di rete, oneri di sistema, accise e IVA sono regolati da ARERA e sono uguali per tutti i fornitori.<br>
+        I calcoli sono indicativi e basati sui dati inseriti.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Database offerte (prezzi indicativi, dic 2025)
+    var offerteDB = {
+      'Octopus Energy': [
+        { nome: 'Fissa 12M', prezzo: 0.099, comm: 6 },
+        { nome: 'Flex (PUN+0.009)', prezzo: 0.118, comm: 6 },
+        { nome: 'Inserisci manualmente', prezzo: null, comm: null }
+      ],
+      'Enel Energia': [
+        { nome: 'Fix Web Luce', prezzo: 0.127, comm: 12 },
+        { nome: 'Fix Luce', prezzo: 0.132, comm: 12 },
+        { nome: 'Ore Free', prezzo: 0.135, comm: 12 },
+        { nome: 'Flex (PUN)', prezzo: 0.125, comm: 12 },
+        { nome: 'Inserisci manualmente', prezzo: null, comm: null }
+      ],
+      'Eni Plenitude': [
+        { nome: 'Trend Casa Luce', prezzo: 0.125, comm: 12 },
+        { nome: 'Fix Online Luce', prezzo: 0.118, comm: 10 },
+        { nome: 'Inserisci manualmente', prezzo: null, comm: null }
+      ],
+      'A2A Energia': [
+        { nome: 'Click Luce', prezzo: 0.115, comm: 9.17 },
+        { nome: 'Prezzo Chiaro Luce', prezzo: 0.122, comm: 10 },
+        { nome: 'Inserisci manualmente', prezzo: null, comm: null }
+      ],
+      'Edison Energia': [
+        { nome: 'World Luce', prezzo: 0.118, comm: 10 },
+        { nome: 'Web Luce', prezzo: 0.112, comm: 8 },
+        { nome: 'Inserisci manualmente', prezzo: null, comm: null }
+      ],
+      'Sorgenia': [
+        { nome: 'Next Energy', prezzo: 0.110, comm: 7.50 },
+        { nome: 'Beyond Energy', prezzo: 0.125, comm: 9 },
+        { nome: 'Inserisci manualmente', prezzo: null, comm: null }
+      ],
+      'Hera Comm': [
+        { nome: 'Prezzo Netto Luce', prezzo: 0.120, comm: 10 },
+        { nome: 'Inserisci manualmente', prezzo: null, comm: null }
+      ],
+      'Iren Mercato': [
+        { nome: 'Iren 10 Luce', prezzo: 0.115, comm: 9 },
+        { nome: 'Inserisci manualmente', prezzo: null, comm: null }
+      ],
+      'Acea Energia': [
+        { nome: 'Acea Fix Luce', prezzo: 0.121, comm: 6 },
+        { nome: 'Inserisci manualmente', prezzo: null, comm: null }
+      ],
+      'NeN': [
+        { nome: 'NeN Luce', prezzo: 0.104, comm: 8 },
+        { nome: 'Inserisci manualmente', prezzo: null, comm: null }
+      ],
+      'Pulsee': [
+        { nome: 'Luce Relax Fix', prezzo: 0.108, comm: 12 },
+        { nome: 'Inserisci manualmente', prezzo: null, comm: null }
+      ],
+      'Wekiwi': [
+        { nome: 'Energia alla Fonte', prezzo: 0.105, comm: 5.50 },
+        { nome: 'Inserisci manualmente', prezzo: null, comm: null }
+      ],
+      'E.ON Energia': [
+        { nome: 'Luce e Gas Insieme', prezzo: 0.128, comm: 11 },
+        { nome: 'Inserisci manualmente', prezzo: null, comm: null }
+      ],
+      'Illumia': [
+        { nome: 'Luce Flex', prezzo: 0.115, comm: 8 },
+        { nome: 'Inserisci manualmente', prezzo: null, comm: null }
+      ],
+      'Fastweb Energia': [
+        { nome: 'Fastweb Luce', prezzo: 0.110, comm: 8 },
+        { nome: 'Inserisci manualmente', prezzo: null, comm: null }
+      ],
+      'Dolomiti Energia': [
+        { nome: 'Semplice Luce Casa', prezzo: 0.118, comm: 8 },
+        { nome: 'Inserisci manualmente', prezzo: null, comm: null }
+      ],
+      '__default__': [
+        { nome: 'Inserisci manualmente', prezzo: null, comm: null }
+      ]
+    };
+    
+    // State
+    var currentStep = 1;
+    var state = {
+      op1: { type: null, nome: '', prezzo: 0, comm: 0 },
+      op2: { type: null, nome: '', prezzo: 0, comm: 0 }
+    };
+
+    // DOM Elements
+    var steps = [
+      document.getElementById('step1'),
+      document.getElementById('step2'),
+      document.getElementById('step3'),
+      document.getElementById('step4')
+    ];
+    var progDots = [
+      document.getElementById('prog1'),
+      document.getElementById('prog2'),
+      document.getElementById('prog3'),
+      document.getElementById('prog4')
+    ];
+    var progLines = [
+      document.getElementById('line1'),
+      document.getElementById('line2'),
+      document.getElementById('line3')
+    ];
+
+    // Toggle ARERA
+    var toggleBtn = document.getElementById('toggleArera');
+    var areraContent = document.getElementById('areraContent');
+    toggleBtn.addEventListener('click', function() {
+      toggleBtn.classList.toggle('open');
+      areraContent.classList.toggle('open');
+    });
+
+    // Navigation
+    function goToStep(step) {
+      // Hide current
+      steps[currentStep - 1].classList.remove('active');
+      
+      // Update progress
+      for (var i = 0; i < 4; i++) {
+        progDots[i].classList.remove('active', 'completed');
+        if (i < step - 1) {
+          progDots[i].classList.add('completed');
+          progDots[i].innerHTML = '✓';
+        } else if (i === step - 1) {
+          progDots[i].classList.add('active');
+          progDots[i].innerHTML = (i + 1).toString();
+        } else {
+          progDots[i].innerHTML = (i + 1).toString();
+        }
+      }
+      
+      for (var i = 0; i < 3; i++) {
+        progLines[i].classList.toggle('completed', i < step - 1);
+      }
+      
+      // Show new step
+      currentStep = step;
+      steps[currentStep - 1].classList.add('active');
+      
+      // Calculate if step 4
+      if (step === 4) {
+        calculateResults();
+      }
+    }
+
+    // Market Selection
+    function selectMarket(op, type) {
+      var opKey = 'op' + op;
+      state[opKey].type = type;
+      
+      // Update UI
+      var liberoBtn = document.getElementById('op' + op + '-libero');
+      var stgBtn = document.getElementById('op' + op + '-stg');
+      var fields = document.getElementById('op' + op + '-fields');
+      var nextBtn = document.getElementById('btn-step' + (op + 1));
+      
+      liberoBtn.classList.toggle('selected', type === 'libero');
+      stgBtn.classList.toggle('selected', type === 'stg');
+      fields.style.display = 'block';
+      nextBtn.disabled = false;
+      
+      // Get elements
+      var selectEl = document.getElementById('select' + op);
+      var offertaSelect = document.getElementById('offerta' + op);
+      var operatorRow = selectEl.closest('.operator-row');
+      var nomeGroup = document.getElementById('nome' + op + '-group');
+      var nomeInput = document.getElementById('nome' + op);
+      var disclaimerEl = document.getElementById('disclaimer' + op);
+      var prezzoInput = document.getElementById('prezzo' + op);
+      var commInput = document.getElementById('comm' + op);
+      var prezzoLabel = document.getElementById('prezzo' + op + '-label');
+      var prezzoHint = document.getElementById('prezzo' + op + '-hint');
+      var commGroup = document.getElementById('comm' + op + '-group');
+      var commLabel = document.getElementById('comm' + op + '-label');
+      var commHint = document.getElementById('comm' + op + '-hint');
+      
+      if (type === 'libero') {
+        // Mercato Libero: mostra dropdown operatori e offerte
+        operatorRow.style.display = 'flex';
+        nomeGroup.style.display = 'none';
+        disclaimerEl.style.display = 'none';
+        selectEl.value = op === 1 ? 'Octopus Energy' : 'Enel Energia';
+        nomeInput.value = selectEl.value;
+        // Popola e seleziona prima offerta
+        populateOfferte(op, selectEl.value);
+        offertaSelect.value = '0';
+        var offerte = offerteDB[selectEl.value];
+        if (offerte && offerte[0]) {
+          prezzoInput.value = offerte[0].prezzo;
+          commInput.value = offerte[0].comm;
+          disclaimerEl.style.display = 'block';
+        }
+        prezzoLabel.textContent = 'Prezzo energia';
+        prezzoHint.textContent = 'Dal contratto';
+        commGroup.style.display = 'block';
+        commLabel.textContent = 'Commercializzazione';
+        commHint.textContent = 'Quota fissa venditore';
+      } else {
+        // STG: nascondi dropdown, mostra campo nome
+        operatorRow.style.display = 'none';
+        nomeGroup.style.display = 'block';
+        disclaimerEl.style.display = 'none';
+        nomeInput.value = op === 1 ? 'Hera STG' : 'Servizio Tutele Graduali';
+        prezzoInput.value = '0.137';
+        commInput.value = '-6.10';
+        prezzoLabel.textContent = 'Prezzo energia medio';
+        prezzoHint.textContent = 'Media fasce F1/F2/F3 dalla bolletta';
+        commGroup.style.display = 'block';
+        commLabel.textContent = 'Quota fissa venditore';
+        commHint.textContent = 'Solitamente negativa (-6.10€)';
+      }
+      
+      // Save to state
+      state[opKey].nome = nomeInput.value;
+      state[opKey].prezzo = parseFloat(prezzoInput.value);
+      state[opKey].comm = parseFloat(commInput.value);
+      
+      // Add input listeners
+      nomeInput.oninput = function() { state[opKey].nome = this.value; };
+      prezzoInput.oninput = function() { state[opKey].prezzo = parseFloat(this.value) || 0; };
+      commInput.oninput = function() { state[opKey].comm = parseFloat(this.value) || 0; };
+    }
+    
+    // Operator dropdown selection
+    function onSelectOperator(op) {
+      var opKey = 'op' + op;
+      var selectEl = document.getElementById('select' + op);
+      var nomeGroup = document.getElementById('nome' + op + '-group');
+      var nomeInput = document.getElementById('nome' + op);
+      var offertaSelect = document.getElementById('offerta' + op);
+      var disclaimerEl = document.getElementById('disclaimer' + op);
+      var value = selectEl.value;
+      
+      if (value === '__altro__') {
+        // Mostra campo testo per nome personalizzato
+        nomeGroup.style.display = 'block';
+        nomeInput.value = '';
+        nomeInput.focus();
+        // Nascondi offerte e disclaimer
+        offertaSelect.innerHTML = '<option value="">-- Non disponibile --</option>';
+        disclaimerEl.style.display = 'none';
+      } else if (value) {
+        // Nascondi campo testo, usa valore dropdown
+        nomeGroup.style.display = 'none';
+        nomeInput.value = value;
+        // Popola offerte
+        populateOfferte(op, value);
+        disclaimerEl.style.display = 'none';
+      } else {
+        nomeGroup.style.display = 'none';
+        offertaSelect.innerHTML = '<option value="">-- Prima seleziona operatore --</option>';
+        disclaimerEl.style.display = 'none';
+      }
+      
+      state[opKey].nome = nomeInput.value;
+    }
+    
+    // Popola dropdown offerte
+    function populateOfferte(op, operatore) {
+      var offertaSelect = document.getElementById('offerta' + op);
+      var offerte = offerteDB[operatore] || offerteDB['__default__'];
+      
+      offertaSelect.innerHTML = '<option value="">-- Seleziona offerta --</option>';
+      offerte.forEach(function(off, idx) {
+        var opt = document.createElement('option');
+        opt.value = idx;
+        opt.textContent = off.nome;
+        if (off.prezzo !== null) {
+          opt.textContent += ' (' + off.prezzo.toFixed(3) + ' €/kWh)';
+        }
+        offertaSelect.appendChild(opt);
+      });
+    }
+    
+    // Offerta selection - auto-compila prezzi
+    function onSelectOfferta(op) {
+      var opKey = 'op' + op;
+      var selectEl = document.getElementById('select' + op);
+      var offertaSelect = document.getElementById('offerta' + op);
+      var prezzoInput = document.getElementById('prezzo' + op);
+      var commInput = document.getElementById('comm' + op);
+      var disclaimerEl = document.getElementById('disclaimer' + op);
+      
+      var operatore = selectEl.value;
+      var offertaIdx = parseInt(offertaSelect.value);
+      
+      if (isNaN(offertaIdx)) {
+        disclaimerEl.style.display = 'none';
+        return;
+      }
+      
+      var offerte = offerteDB[operatore] || offerteDB['__default__'];
+      var offerta = offerte[offertaIdx];
+      
+      if (offerta && offerta.prezzo !== null) {
+        prezzoInput.value = offerta.prezzo;
+        commInput.value = offerta.comm;
+        state[opKey].prezzo = offerta.prezzo;
+        state[opKey].comm = offerta.comm;
+        disclaimerEl.style.display = 'block';
+      } else {
+        // Inserimento manuale
+        prezzoInput.value = '';
+        commInput.value = '';
+        disclaimerEl.style.display = 'none';
+      }
+    }
+    
+    // Ricerca prezzi online
+    function searchPrices(op) {
+      var selectEl = document.getElementById('select' + op);
+      var nomeInput = document.getElementById('nome' + op);
+      var operatore = selectEl.value === '__altro__' ? nomeInput.value : selectEl.value;
+      
+      if (!operatore) {
+        alert('Seleziona prima un operatore');
+        return;
+      }
+      
+      var query = encodeURIComponent(operatore + ' offerte luce prezzo kWh ' + new Date().getFullYear());
+      window.open('https://www.google.com/search?q=' + query, '_blank');
+    }
+
+    // Calculate Results
+    function calculateResults() {
+      // Get fornitura data
+      var consumo = parseFloat(document.getElementById('consumo').value) || 0;
+      var potenza = parseFloat(document.getElementById('potenza').value) || 0;
+      var mesi = parseFloat(document.getElementById('mesi').value) || 1;
+      var reteOneri = parseFloat(document.getElementById('reteOneri').value) || 0;
+      var quotaFissa = parseFloat(document.getElementById('quotaFissa').value) || 0;
+      var quotaPotenza = parseFloat(document.getElementById('quotaPotenza').value) || 0;
+      var accise = parseFloat(document.getElementById('accise').value) || 0;
+      var iva = (parseFloat(document.getElementById('iva').value) || 0) / 100;
+      
+      function calcolaOperatore(op) {
+        var energia = consumo * op.prezzo;
+        var commercializzazione = op.comm * mesi;
+        var rete = consumo * reteOneri;
+        var fissa = quotaFissa * mesi;
+        var potenzaCosto = potenza * quotaPotenza * mesi;
+        var subtotale = energia + commercializzazione + rete + fissa + potenzaCosto;
+        var acciseCosto = consumo * accise;
+        var imponibile = subtotale + acciseCosto;
+        var ivaCosto = imponibile * iva;
+        var totale = imponibile + ivaCosto;
+        
+        return {
+          energia: energia,
+          commercializzazione: commercializzazione,
+          rete: rete,
+          fissa: fissa,
+          potenzaCosto: potenzaCosto,
+          accise: acciseCosto,
+          iva: ivaCosto,
+          totale: totale
+        };
+      }
+      
+      var calc1 = calcolaOperatore(state.op1);
+      var calc2 = calcolaOperatore(state.op2);
+      var diff = calc2.totale - calc1.totale;
+      var winner = diff > 0.01 ? 1 : diff < -0.01 ? 2 : 0;
+      var totaleMin = Math.min(calc1.totale, calc2.totale);
+      var diffPerc = totaleMin > 0 ? (Math.abs(diff) / totaleMin) * 100 : 0;
+      var risparmioAnnuo = Math.abs(diff) * (12 / mesi);
+      
+      // Render result cards
+      var resultCardsHtml = '';
+      var ops = [
+        { state: state.op1, calc: calc1, num: 1 },
+        { state: state.op2, calc: calc2, num: 2 }
+      ];
+      
+      ops.forEach(function(op) {
+        var isWinner = winner === op.num;
+        var cardClass = 'result-card ' + op.state.type + (isWinner ? ' winner' : '');
+        resultCardsHtml += '<div class="' + cardClass + '">' +
+          '<div class="result-operator">Operatore ' + op.num + ' • ' + (op.state.type === 'stg' ? 'Tutele Graduali' : 'Mercato Libero') + '</div>' +
+          '<div class="result-name">' + op.state.nome + '</div>' +
+          '<div class="result-total">' + op.calc.totale.toFixed(2) + ' €</div>' +
+          '<div class="result-period">per ' + mesi + ' mesi</div>' +
+          (isWinner ? '<div class="winner-badge">✓ Più conveniente</div>' : '') +
+        '</div>';
+      });
+      document.getElementById('resultCards').innerHTML = resultCardsHtml;
+      
+      // Render summary
+      var winnerName = winner === 1 ? state.op1.nome : winner === 2 ? state.op2.nome : 'Pari';
+      var loserName = winner === 1 ? state.op2.nome : state.op1.nome;
+      var summaryHtml = 
+        '<div class="summary-box">' +
+          '<div class="summary-label">Differenza</div>' +
+          '<div class="summary-value">' + (diff > 0 ? '+' : '') + diff.toFixed(2) + ' €</div>' +
+          '<div class="summary-note">' + (diff > 0 ? loserName + ' costa di più' : diff < 0 ? loserName + ' costa di più' : '') + '</div>' +
+        '</div>' +
+        '<div class="summary-box">' +
+          '<div class="summary-label">Differenza %</div>' +
+          '<div class="summary-value' + (diffPerc > 0 ? ' positive' : '') + '">+' + diffPerc.toFixed(1) + '%</div>' +
+          '<div class="summary-note">rispetto al più economico</div>' +
+        '</div>' +
+        '<div class="summary-box highlight">' +
+          '<div class="summary-label">Risparmio annuo</div>' +
+          '<div class="summary-value positive">' + risparmioAnnuo.toFixed(2) + ' €</div>' +
+          '<div class="summary-note">con ' + winnerName + '</div>' +
+        '</div>';
+      document.getElementById('summaryGrid').innerHTML = summaryHtml;
+      
+      // Render compare bars
+      var compareData = [
+        { label: 'Energia', v1: calc1.energia, v2: calc2.energia },
+        { label: 'Quota venditore', v1: calc1.commercializzazione, v2: calc2.commercializzazione },
+        { label: 'Rete + Oneri + Potenza', v1: calc1.rete + calc1.fissa + calc1.potenzaCosto, v2: calc2.rete + calc2.fissa + calc2.potenzaCosto },
+        { label: 'Imposte (Accise + IVA)', v1: calc1.accise + calc1.iva, v2: calc2.accise + calc2.iva }
+      ];
+      
+      var barsHtml = '';
+      compareData.forEach(function(item) {
+        // Handle negative values for display
+        var displayV1 = item.v1;
+        var displayV2 = item.v2;
+        var maxVal = Math.max(Math.abs(item.v1), Math.abs(item.v2)) * 1.1;
+        var w1 = Math.abs(item.v1 / maxVal) * 100;
+        var w2 = Math.abs(item.v2 / maxVal) * 100;
+        
+        barsHtml += '<div class="compare-item">' +
+          '<div class="compare-label">' + item.label + '</div>' +
+          '<div class="compare-bars">' +
+            '<div class="compare-bar bar1' + (state.op1.type === 'stg' ? ' stg' : '') + '" style="width: ' + w1 + '%">' +
+              '<span class="compare-bar-value">' + item.v1.toFixed(2) + '€</span>' +
+            '</div>' +
+            '<div class="compare-bar bar2' + (state.op2.type === 'stg' ? ' stg' : '') + '" style="width: ' + w2 + '%">' +
+              '<span class="compare-bar-value">' + item.v2.toFixed(2) + '€</span>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      });
+      document.getElementById('compareBars').innerHTML = barsHtml;
+    }
+  </script>
+</body>
+</html>
