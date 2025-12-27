@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://heisenpark.github.io/simulatore-cambio-operatore/sitemap.xml
