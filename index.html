@@ -10,7 +10,8 @@
   <meta name="keywords" content="simulatore cambio operatore, passaggio fornitore luce, risparmio bolletta, Octopus Energy, Enel, mercato libero, tutele graduali, STG, prezzo kWh">
   <meta name="author" content="Energia Simulator">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="">
+  <meta name="google-site-verification" content="aMbCYB2h9pdynQASu5t4igP4s8P0NWVW3Uznws3hQNo">
+  <link rel="canonical" href="https://heisenpark.github.io/simulatore-cambio-operatore/">
   
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
@@ -18,7 +19,7 @@
   <meta property="og:title" content="Simulatore Cambio Operatore Luce | Quanto Risparmi?">
   <meta property="og:description" content="Simula il passaggio a un nuovo operatore. Scopri quanto risparmieresti sulla bolletta luce. Gratuito e senza registrazione.">
   <meta property="og:image" content="">
-  <meta property="og:url" content="">
+  <meta property="og:url" content="https://heisenpark.github.io/simulatore-cambio-operatore/">
   <meta property="og:site_name" content="Simulatore Energia">
   
   <!-- Twitter Card -->
@@ -318,29 +319,6 @@
       margin-bottom: 1rem;
     }
     
-    .btn-search {
-      height: 44px;
-      width: 44px;
-      min-width: 44px;
-      margin-bottom: 1rem; /* Allinea con input-group */
-      border: none;
-      border-radius: 8px;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      font-size: 1.25rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .btn-search:hover {
-      background: var(--green);
-      border-color: var(--green);
-      transform: scale(1.05);
-    }
-    
     .price-disclaimer {
       background: rgba(234, 179, 8, 0.1);
       border: 1px solid rgba(234, 179, 8, 0.3);
@@ -349,6 +327,16 @@
       font-size: 0.75rem;
       color: #eab308;
       margin-bottom: 1rem;
+    }
+    
+    .price-disclaimer a {
+      color: #fbbf24;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    .price-disclaimer a:hover {
+      text-decoration: underline;
     }
     
     .grid-3 {
@@ -680,8 +668,23 @@
     
     .grid-5 {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.75rem;
+    }
+    
+    .grid-5 .input-field {
+      font-size: 0.875rem;
+      padding: 0.5rem 0.625rem;
+      padding-right: 2.75rem;
+    }
+    
+    .grid-5 .input-unit {
+      font-size: 0.625rem;
+      right: 0.5rem;
+    }
+    
+    .grid-5 .input-label {
+      font-size: 0.7rem;
     }
     
     /* Footer */
@@ -712,9 +715,6 @@
       }
       .operator-row .input-group {
         flex: none !important;
-      }
-      .btn-search {
-        width: 100%;
       }
     }
   </style>
@@ -891,14 +891,13 @@
                 <option value="">-- Prima seleziona operatore --</option>
               </select>
             </div>
-            <button type="button" class="btn-search" onclick="searchPrices(1)" title="Verifica prezzi online">🔍</button>
           </div>
           <div class="input-group" id="nome1-group" style="display: none;">
             <label class="input-label">Nome operatore</label>
             <input type="text" id="nome1" class="input-field" style="padding-right: 1rem;" placeholder="Inserisci nome operatore" autocomplete="off" data-1p-ignore data-lpignore="true">
           </div>
           <div class="price-disclaimer" id="disclaimer1" style="display: none;">
-            ⚠️ Prezzi indicativi, potrebbero variare. Verifica sul sito ufficiale.
+            ⚠️ Prezzi indicativi, potrebbero variare. <a href="#" onclick="searchPrices(1); return false;">Verifica sul sito ufficiale →</a>
           </div>
           
           <div class="fields-row">
@@ -986,14 +985,13 @@
                 <option value="">-- Prima seleziona operatore --</option>
               </select>
             </div>
-            <button type="button" class="btn-search" onclick="searchPrices(2)" title="Verifica prezzi online">🔍</button>
           </div>
           <div class="input-group" id="nome2-group" style="display: none;">
             <label class="input-label">Nome operatore</label>
             <input type="text" id="nome2" class="input-field" style="padding-right: 1rem;" placeholder="Inserisci nome operatore" autocomplete="off" data-1p-ignore data-lpignore="true">
           </div>
           <div class="price-disclaimer" id="disclaimer2" style="display: none;">
-            ⚠️ Prezzi indicativi, potrebbero variare. Verifica sul sito ufficiale.
+            ⚠️ Prezzi indicativi, potrebbero variare. <a href="#" onclick="searchPrices(2); return false;">Verifica sul sito ufficiale →</a>
           </div>
           
           <div class="fields-row">
