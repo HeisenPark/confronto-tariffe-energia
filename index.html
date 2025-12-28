@@ -388,7 +388,16 @@
       border-color: var(--blue);
       background: rgba(59, 130, 246, 0.1);
     }
-    
+
+    .market-option.selected.compare-all {
+      border-color: var(--orange);
+      background: rgba(249, 115, 22, 0.1);
+    }
+
+    .market-options-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
     .market-icon {
       font-size: 2rem;
       margin-bottom: 0.5rem;
@@ -701,10 +710,164 @@
       font-size: 0.75rem;
       margin-top: 2rem;
     }
-    
+
+    /* Ranking (Confronta Tutti) */
+    .your-current-box {
+      background: var(--input-bg);
+      border: 2px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .your-current-label {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .your-current-name {
+      font-weight: 600;
+      margin-top: 0.25rem;
+    }
+
+    .your-current-total {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .ranking-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .ranking-item {
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      display: grid;
+      grid-template-columns: 2rem 1fr auto auto;
+      gap: 1rem;
+      align-items: center;
+      transition: all 0.2s;
+    }
+
+    .ranking-item:hover {
+      border-color: var(--text-dim);
+    }
+
+    .ranking-item.cheaper {
+      border-color: var(--green);
+      background: var(--green-bg);
+    }
+
+    .ranking-item.same {
+      border-color: var(--blue);
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    .ranking-item.expensive {
+      border-color: rgba(239, 68, 68, 0.3);
+      background: rgba(239, 68, 68, 0.05);
+    }
+
+    .ranking-position {
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      font-size: 0.9rem;
+      min-width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      color: var(--text-muted);
+    }
+
+    .ranking-position.medal-1 {
+      background: linear-gradient(135deg, #ffd700 0%, #ffb800 100%);
+      color: #1a1a1a;
+    }
+
+    .ranking-position.medal-2 {
+      background: linear-gradient(135deg, #c0c0c0 0%, #a0a0a0 100%);
+      color: #1a1a1a;
+    }
+
+    .ranking-position.medal-3 {
+      background: linear-gradient(135deg, #cd7f32 0%, #a56729 100%);
+      color: #1a1a1a;
+    }
+
+    .ranking-item.cheaper .ranking-position:not(.medal-1):not(.medal-2):not(.medal-3) {
+      color: var(--green);
+    }
+
+    .ranking-info {
+      min-width: 0;
+    }
+
+    .ranking-operator {
+      font-weight: 600;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ranking-offer {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .ranking-total {
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .ranking-diff {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      text-align: right;
+      min-width: 80px;
+    }
+
+    .ranking-diff.cheaper {
+      color: var(--green);
+    }
+
+    .ranking-diff.expensive {
+      color: #ef4444;
+    }
+
+    .ranking-diff.same {
+      color: var(--text-muted);
+    }
+
+    .ranking-disclaimer {
+      background: rgba(234, 179, 8, 0.1);
+      border: 1px solid rgba(234, 179, 8, 0.3);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.8rem;
+      color: #eab308;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
     /* Responsive */
     @media (max-width: 500px) {
-      .market-options {
+      .market-options, .market-options-3 {
         grid-template-columns: 1fr;
       }
       .result-cards {
@@ -940,8 +1103,8 @@
       <div class="card">
         <h2 class="card-title">🎯 Nuovo Operatore</h2>
         <p class="card-subtitle">A chi vorresti passare?</p>
-        
-        <div class="market-options">
+
+        <div class="market-options market-options-3">
           <div class="market-option libero" id="op2-libero" onclick="selectMarket(2, 'libero')">
             <div class="market-icon">🏪</div>
             <div class="market-name">Mercato Libero</div>
@@ -951,6 +1114,11 @@
             <div class="market-icon">🛡️</div>
             <div class="market-name">Tutele Graduali</div>
             <div class="market-desc">Prezzo variabile ARERA</div>
+          </div>
+          <div class="market-option compare-all" id="op2-all" onclick="selectCompareAll()">
+            <div class="market-icon">📊</div>
+            <div class="market-name">Confronta Tutti</div>
+            <div class="market-desc">Classifica operatori</div>
           </div>
         </div>
 
@@ -1056,6 +1224,31 @@
         I calcoli sono indicativi e basati sui dati inseriti.
       </div>
     </div>
+
+    <!-- Step 5: Confronta Tutti -->
+    <div class="step" id="step5">
+      <div class="card">
+        <h2 class="card-title">📊 Classifica Operatori</h2>
+        <p class="card-subtitle">Confronto con tutti gli operatori nel database</p>
+
+        <div class="your-current-box" id="yourCurrentBox">
+          <!-- Generato da JS -->
+        </div>
+
+        <div class="ranking-list" id="rankingList">
+          <!-- Generato da JS -->
+        </div>
+
+        <div class="ranking-disclaimer">
+          ⚠️ Prezzi indicativi (dic 2025). Verifica sempre sul sito ufficiale dell'operatore.
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="goToStep(2)">← Modifica attuale</button>
+          <button class="btn btn-primary" onclick="goToStep(1)">🔄 Nuovo confronto</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -1140,6 +1333,7 @@
     
     // State
     var currentStep = 1;
+    var compareAllMode = false;
     var state = {
       op1: { type: null, nome: '', prezzo: 0, comm: 0 },
       op2: { type: null, nome: '', prezzo: 0, comm: 0 }
@@ -1150,7 +1344,8 @@
       document.getElementById('step1'),
       document.getElementById('step2'),
       document.getElementById('step3'),
-      document.getElementById('step4')
+      document.getElementById('step4'),
+      document.getElementById('step5')
     ];
     var progDots = [
       document.getElementById('prog1'),
@@ -1199,9 +1394,11 @@
       currentStep = step;
       steps[currentStep - 1].classList.add('active');
       
-      // Calculate if step 4
+      // Calculate if step 4 or 5
       if (step === 4) {
         calculateResults();
+      } else if (step === 5) {
+        calculateAllOperators();
       }
     }
 
@@ -1499,7 +1696,116 @@
       });
       document.getElementById('compareBars').innerHTML = barsHtml;
     }
-    
+
+    // Select "Confronta Tutti" mode
+    function selectCompareAll() {
+      compareAllMode = true;
+
+      // Visual feedback
+      var allOption = document.getElementById('op2-all');
+      var liberoBtn = document.getElementById('op2-libero');
+      var stgBtn = document.getElementById('op2-stg');
+      var fields = document.getElementById('op2-fields');
+
+      allOption.classList.add('selected');
+      liberoBtn.classList.remove('selected');
+      stgBtn.classList.remove('selected');
+      fields.style.display = 'none';
+
+      // Go to step 5
+      goToStep(5);
+    }
+
+    // Calculate all operators ranking
+    function calculateAllOperators() {
+      // Get fornitura data
+      var consumo = parseFloat(document.getElementById('consumo').value) || 0;
+      var potenza = parseFloat(document.getElementById('potenza').value) || 0;
+      var mesi = parseFloat(document.getElementById('mesi').value) || 1;
+      var reteOneri = parseFloat(document.getElementById('reteOneri').value) || 0;
+      var quotaFissa = parseFloat(document.getElementById('quotaFissa').value) || 0;
+      var quotaPotenza = parseFloat(document.getElementById('quotaPotenza').value) || 0;
+      var accise = parseFloat(document.getElementById('accise').value) || 0;
+      var iva = (parseFloat(document.getElementById('iva').value) || 0) / 100;
+
+      function calcolaOperatore(prezzo, comm) {
+        var energia = consumo * prezzo;
+        var commercializzazione = comm * mesi;
+        var rete = consumo * reteOneri;
+        var fissa = quotaFissa * mesi;
+        var potenzaCosto = potenza * quotaPotenza * mesi;
+        var subtotale = energia + commercializzazione + rete + fissa + potenzaCosto;
+        var acciseCosto = consumo * accise;
+        var imponibile = subtotale + acciseCosto;
+        var ivaCosto = imponibile * iva;
+        var totale = imponibile + ivaCosto;
+        return totale;
+      }
+
+      // Calculate current operator (op1)
+      var currentTotal = calcolaOperatore(state.op1.prezzo, state.op1.comm);
+
+      // Render current operator box
+      var risparmioAnnuoBase = currentTotal * (12 / mesi);
+      document.getElementById('yourCurrentBox').innerHTML =
+        '<div class="your-current-label">Il tuo operatore attuale</div>' +
+        '<div class="your-current-name">' + state.op1.nome + '</div>' +
+        '<div class="your-current-total">' + currentTotal.toFixed(2) + ' €</div>' +
+        '<div class="your-current-period">per ' + mesi + ' mesi (' + risparmioAnnuoBase.toFixed(2) + ' €/anno)</div>';
+
+      // Calculate all operators from database
+      var results = [];
+      for (var operatore in offerteDB) {
+        if (operatore === '__default__') continue;
+        var offerte = offerteDB[operatore];
+
+        offerte.forEach(function(off) {
+          if (off.prezzo === null) return; // Skip manual entries
+
+          var totale = calcolaOperatore(off.prezzo, off.comm);
+          var diff = totale - currentTotal;
+          var diffAnnuo = diff * (12 / mesi);
+
+          results.push({
+            operatore: operatore,
+            offerta: off.nome,
+            prezzo: off.prezzo,
+            comm: off.comm,
+            totale: totale,
+            diff: diff,
+            diffAnnuo: diffAnnuo
+          });
+        });
+      }
+
+      // Sort by total cost (cheapest first)
+      results.sort(function(a, b) { return a.totale - b.totale; });
+
+      // Render ranking list
+      var rankingHtml = '';
+      results.forEach(function(r, idx) {
+        var position = idx + 1;
+        var medalClass = position <= 3 ? 'medal-' + position : '';
+        var diffClass = r.diff < -0.5 ? 'cheaper' : r.diff > 0.5 ? 'expensive' : 'same';
+        var diffSign = r.diff < 0 ? '' : '+';
+
+        rankingHtml +=
+          '<div class="ranking-item ' + diffClass + '">' +
+            '<div class="ranking-position ' + medalClass + '">' + position + '</div>' +
+            '<div class="ranking-info">' +
+              '<div class="ranking-operator">' + r.operatore + '</div>' +
+              '<div class="ranking-offer">' + r.offerta + ' • ' + r.prezzo.toFixed(3) + ' €/kWh</div>' +
+            '</div>' +
+            '<div class="ranking-cost">' +
+              '<div class="ranking-total">' + r.totale.toFixed(2) + ' €</div>' +
+              '<div class="ranking-diff ' + diffClass + '">' + diffSign + r.diff.toFixed(2) + ' € (' + diffSign + r.diffAnnuo.toFixed(0) + ' €/anno)</div>' +
+            '</div>' +
+          '</div>';
+      });
+
+      document.getElementById('rankingList').innerHTML = rankingHtml;
+    }
+
     // ========== Anti-Inspection Protection ==========
     // Disable right-click context menu
     document.addEventListener('contextmenu', function(e) {
