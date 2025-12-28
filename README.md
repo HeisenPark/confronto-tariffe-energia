@@ -10,10 +10,6 @@ simulatore-cambio-fornitore-energia/
 ├── robots.txt              # Configurazione SEO crawler
 ├── sitemap.xml             # Mappa del sito
 ├── README.md               # Documentazione
-└── docs/                   # Documenti di riferimento
-    ├── octopus.pdf         # Esempio bolletta Octopus Energy
-    ├── hera.pdf            # Esempio bolletta Hera STG
-    └── confronto_energia.xlsx  # Foglio calcolo confronto tariffe
 ```
 
 ## Funzionalità
